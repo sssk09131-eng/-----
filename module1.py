@@ -40,10 +40,36 @@ def generate_data_quality_report(data):
     missing_rate = (missing_values / len(data)) * 100
     print(f"\n缺失率: {missing_rate.round(2).tolist()}")
     
-    # 检查重复值
-    duplicate_count = data.duplicated().sum()
-    print(f"\n重复值数量: {duplicate_count}")
+    #异常值检测
+    numeric_cols = data.select_dtypes(include=[np.number]).columns
+    outliers = {}
+    
+    for col in numeric_cols:
+        # IQR方法检测异常值
+        Q1 = data[col].quantile(0.25)
+        Q3 = data[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        
+        # 统计异常值数量
+        outlier_count = ((data[col] < lower_bound) | (data[col] > upper_bound)).sum()
+        outliers[col] = {
+            'lower_bound': lower_bound,
+            'upper_bound': upper_bound,
+            'outlier_count': outlier_count,
+            'outlier_percent': (outlier_count / len(data)) * 100
+        }
     
     # 检查数据类型
     print("\n数据类型统计:")
     print(data.dtypes)
+
+#生成报告
+    quality_report = {
+    'missing_values': data.isnull().sum(),
+    'missing_rate': (data.isnull().sum() / len(data)) * 100,
+    'outliers': outliers,
+    'data_types': data.dtypes
+}
+    return quality_report
