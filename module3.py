@@ -58,3 +58,14 @@ plt.ylabel('Loss')
 plt.legend()
 plt.savefig('outputs/loss_curve.png')
 plt.close() 
+
+# 评估神经网络模型
+y_pred = model.predict(X_test_scaled_reshaped)
+mae_nn = mean_absolute_error(y_test, y_pred)
+rmse_nn = np.sqrt(mean_squared_error(y_test, y_pred))
+
+# 保存评估报告
+with open('outputs/nn_report.txt', 'w') as f:
+    f.write(f"神经网络模型评估报告\n")
+    f.write(f"MAE: {mae_nn:.4f}\n")
+    f.write(f"RMSE: {rmse_nn:.4f}\n")
