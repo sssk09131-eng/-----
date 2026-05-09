@@ -23,7 +23,7 @@ def main():
         handle_user_query(user_input, df)
 
 def handle_user_query(query, df):
-    """处理用户查询的主要函数"""
+    
     # 1. 分析用户意图
     intent, params = analyze_intent(query)
     
@@ -70,7 +70,7 @@ def analyze_intent(query):
         return None, None
 
 def extract_time_params(query):
-    """提取时段查询的参数"""
+    
     params = {}
     
     # 提取小时信息
@@ -86,7 +86,7 @@ def extract_time_params(query):
     
     return params
 def process_time_query(params, df):
-    """处理时段查询"""
+    
     # 调用M2中的可视化函数
     if 'hour' in params and 'day_type' in params:
         chart_path = generate_hourly_demand(df, params['hour'], params['day_type'])
@@ -99,7 +99,7 @@ def process_time_query(params, df):
         print(f"图表已生成: {chart_path}")
 
 def process_area_ranking(params, df):
-    """处理区域排名查询"""
+    
     # 调用M2中的区域热度分析
     chart_path = generate_area_heatmap(df, top_n=10)
     print("上客量最高的TOP 10区域及高峰时段分布:")
@@ -112,7 +112,7 @@ def process_area_ranking(params, df):
         print(f"{i}. {area}: {count}单")
 
 def process_demand_prediction(params, df):
-    """处理需求预测查询"""
+    
     # 从参数中提取区域和时间
     area = params.get('area', '中心区域')
     time = params.get('time', '明天10点')
@@ -134,3 +134,18 @@ def process_fare_estimate(params, df):
     
     print(f"行程距离{distance}公里，在{time}的预计费用为: ¥{estimated_fare:.2f}")
     print("费用估算基于历史数据和机器学习模型")
+
+def handle_unmatched_query(query):
+    
+    print("\n无法理解您的问题，可能是以下原因:")
+    print("1. 问题表述不够清晰")
+    print("2. 问题类型不在支持范围内")
+    
+    print("\n支持的问题类型包括:")
+    print("- 时段查询: '工作日几点出行需求最高？', '周末高峰时段是几点？'")
+    print("- 区域排名: '上客量最高的区域是哪些？', '热门区域排名'")
+    print("- 需求预测: '明天10点中心区域的出行需求是多少？'")
+    print("- 费用估算: '5公里行程在工作日早高峰需要多少钱？'")
+    print("- 交通状况: '哪些区域拥堵最严重？', '高峰时段的交通效率如何？'")
+    
+    print("\n请尝试更明确的提问，或参考上述示例。")
