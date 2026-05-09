@@ -28,3 +28,22 @@ def load_and_explore_data(file_path):
     print(data.describe())
     
     return data
+
+#生成数据质量报告
+def generate_data_quality_report(data):
+    print("\n数据质量报告:")
+    # 检查缺失值
+    missing_values = data.isnull().sum()
+    print("\n缺失值统计:")
+    print(missing_values)
+    #缺失率    
+    missing_rate = (missing_values / len(data)) * 100
+    print(f"\n缺失率: {missing_rate.round(2).tolist()}")
+    
+    # 检查重复值
+    duplicate_count = data.duplicated().sum()
+    print(f"\n重复值数量: {duplicate_count}")
+    
+    # 检查数据类型
+    print("\n数据类型统计:")
+    print(data.dtypes)
