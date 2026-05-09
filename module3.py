@@ -69,3 +69,27 @@ with open('outputs/nn_report.txt', 'w') as f:
     f.write(f"神经网络模型评估报告\n")
     f.write(f"MAE: {mae_nn:.4f}\n")
     f.write(f"RMSE: {rmse_nn:.4f}\n")
+# 训练随机森林模型
+rf = RandomForestRegressor(n_estimators=100, random_state=42)
+rf.fit(X_train_scaled, y_train)
+
+# 评估随机森林
+y_pred_rf = rf.predict(X_test_scaled)
+mae_rf = mean_absolute_error(y_test, y_pred_rf)
+rmse_rf = np.sqrt(mean_squared_error(y_test, y_pred_rf))
+
+# 对比结果
+print(f"神经网络 - MAE: {mae_nn:.4f}, RMSE: {rmse_nn:.4f}")
+print(f"随机森林 - MAE: {mae_rf:.4f}, RMSE: {rmse_rf:.4f}")
+
+# 可视化对比
+plt.figure(figsize=(12, 6))
+plt.plot(y_test.values, label='实际值')
+plt.plot(y_pred, label='神经网络预测')
+plt.plot(y_pred_rf, label='随机森林预测')
+plt.title('预测结果对比')
+plt.xlabel('时间')
+plt.ylabel('需求量')
+plt.legend()
+plt.savefig('outputs/prediction_comparison.png')
+plt.close()
